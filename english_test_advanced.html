@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Sentence Test - Advanced</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Spectral:wght@400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0f1419;
+            --bg-secondary: #1a1f26;
+            --accent: #00d4aa;
+            --accent-glow: rgba(0, 212, 170, 0.3);
+            --text-primary: #e7f3ff;
+            --text-secondary: #8b9db3;
+            --error: #ff6b6b;
+            --success: #51cf66;
+            --warning: #ffd43b;
+            --hint: #ffa94d;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #1a2332 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 212, 170, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(100, 149, 237, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        h1 {
+            font-family: 'Spectral', serif;
+            font-size: 3rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--accent) 0%, #6495ed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .upload-section {
+            background: var(--bg-secondary);
+            border: 2px dashed var(--accent);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        .upload-section:hover {
+            border-color: #00ffcc;
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent) 0%, #00b894 100%);
+            color: var(--bg-primary);
+            border: none;
+            padding: 14px 35px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans KR', sans-serif;
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 212, 170, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent);
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.2);
+        }
+
+        .category-selection {
+            display: none;
+        }
+
+        .test-card {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .category-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 212, 170, 0.3);
+            color: var(--text-primary);
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans KR', sans-serif;
+            text-align: left;
+        }
+
+        .category-btn:hover {
+            background: rgba(0, 212, 170, 0.15);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .category-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .category-count {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .question-number {
+            font-family: 'Spectral', serif;
+            font-size: 1.3rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: rgba(0, 212, 170, 0.2);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .korean-sentence {
+            font-size: 1.6rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            padding: 25px;
+            background: rgba(0, 212, 170, 0.05);
+            border-left: 4px solid var(--accent);
+            border-radius: 10px;
+        }
+
+        .hint-button {
+            background: rgba(255, 169, 77, 0.15);
+            border: 2px solid var(--hint);
+            color: var(--hint);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hint-button:hover {
+            background: rgba(255, 169, 77, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .hint-button.active {
+            background: rgba(255, 169, 77, 0.3);
+        }
+
+        .hint-content {
+            display: none;
+            background: rgba(255, 169, 77, 0.1);
+            border: 1px solid rgba(255, 169, 77, 0.3);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            color: var(--hint);
+            font-size: 1.1rem;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .hint-content.show {
+            display: block;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 18px 20px;
+            font-size: 1.15rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'Spectral', serif;
+            transition: all 0.3s ease;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+            background: rgba(0, 212, 170, 0.05);
+        }
+
+        .answer-input::placeholder {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .feedback.correct {
+            background: rgba(81, 207, 102, 0.15);
+            border: 2px solid var(--success);
+            color: var(--success);
+        }
+
+        .feedback.incorrect {
+            background: rgba(255, 107, 107, 0.15);
+            border: 2px solid var(--error);
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .comparison {
+            margin-top: 15px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .comparison-row {
+            padding: 12px 15px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .comparison-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .comparison-text {
+            font-family: 'Spectral', serif;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .comparison-text.error {
+            color: var(--error);
+        }
+
+        .comparison-text.correct {
+            color: var(--success);
+        }
+
+        .differences {
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(255, 212, 59, 0.1);
+            border-left: 3px solid var(--warning);
+            border-radius: 6px;
+        }
+
+        .diff-label {
+            font-size: 0.9rem;
+            color: var(--warning);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .diff-item {
+            margin: 6px 0;
+            font-size: 0.95rem;
+        }
+
+        .diff-wrong {
+            color: var(--error);
+            text-decoration: line-through;
+        }
+
+        .diff-right {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 15px 0;
+            font-family: 'Spectral', serif;
+        }
+
+        .score-display.perfect {
+            background: linear-gradient(135deg, var(--success) 0%, #38d9a9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .score-display.good {
+            color: var(--accent);
+        }
+
+        .score-display.needs-work {
+            color: var(--warning);
+        }
+
+        .score-display.low {
+            color: var(--error);
+        }
+
+        .navigation {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent) 0%, #00b894 100%);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Spectral', serif;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-message {
+            background: rgba(255, 107, 107, 0.15);
+            border: 2px solid var(--error);
+            color: var(--error);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>English Sentence Test</h1>
+            <p class="subtitle">구분별로 체계적인 영어 문장 학습</p>
+        </header>
+
+        <div id="app">
+            <div class="upload-section">
+                <label class="upload-label" for="file-upload">
+                    <div class="upload-icon">📁</div>
+                    <div>
+                        <div style="font-size: 1.2rem; margin-bottom: 8px;">엑셀 파일을 선택하세요</div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                            '구분', '한국어', '힌트', '영어' 열이 포함되어야 합니다
+                        </div>
+                    </div>
+                    <button class="btn" type="button" onclick="document.getElementById('file-upload').click()">
+                        파일 선택
+                    </button>
+                </label>
+                <input type="file" id="file-upload" accept=".xlsx,.xls,.csv" />
+                <div class="file-name" id="file-name"></div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="btn" id="start-btn" onclick="startTest()">
+                        학습 시작하기
+                    </button>
+                </div>
+            </div>
+
+            <div id="category-selection" class="category-selection"></div>
+            <div id="test-area" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        let allData = [];
+        let autoStartAfterUpload = false;
+        let testData = [];
+        let currentQuestion = 0;
+        let userAnswers = [];
+        let scores = [];
+        let selectedCategory = '';
+
+        document.getElementById('file-upload').addEventListener('change', handleFileUpload);
+
+        function startTest() {
+            if (allData.length > 0) {
+                document.querySelector('.upload-section').style.display = 'none';
+                showCategorySelection();
+                return;
+            }
+            
+            autoStartAfterUpload = true;
+            document.getElementById('file-upload').click();
+        }
+
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Check filename if triggered from start button
+            if (autoStartAfterUpload) {
+                const htmlFileName = window.location.pathname.split('/').pop().replace('.html', '');
+                const expectedXlsx = htmlFileName + '.xlsx';
+                const expectedCsv = htmlFileName + '.csv';
+                
+                if (file.name !== expectedXlsx && file.name !== expectedCsv) {
+                    const proceed = confirm(
+                        `⚠️ 파일명이 다릅니다!\n\n` +
+                        `예상 파일명: ${expectedXlsx} 또는 ${expectedCsv}\n` +
+                        `선택한 파일: ${file.name}\n\n` +
+                        `계속 진행하시겠습니까?`
+                    );
+                    
+                    if (!proceed) {
+                        autoStartAfterUpload = false;
+                        e.target.value = '';
+                        return;
+                    }
+                }
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+
+                    if (jsonData.length === 0) {
+                        showError('엑셀 파일에 데이터가 없습니다.');
+                        return;
+                    }
+
+                    if (!jsonData[0].hasOwnProperty('구분') || 
+                        !jsonData[0].hasOwnProperty('한국어') || 
+                        !jsonData[0].hasOwnProperty('영어')) {
+                        showError('엑셀 파일에 "구분", "한국어", "영어" 열이 필요합니다.');
+                        return;
+                    }
+
+                    allData = jsonData;
+                    
+                    // Filter out sentences with '외운것' >= 3 if column exists
+                    if (allData.length > 0 && allData[0].hasOwnProperty('외운것')) {
+                        const originalCount = allData.length;
+                        allData = allData.filter(item => {
+                            const memoryCount = item['외운것'];
+                            return memoryCount === null || memoryCount === undefined || memoryCount === '' || parseInt(memoryCount) < 3;
+                        });
+                        const filteredCount = originalCount - allData.length;
+                        if (filteredCount > 0) {
+                            console.log(`${filteredCount}개의 문장이 필터링되었습니다 (외운것 >= 3)`);
+                        }
+                    }
+                    
+                    document.getElementById('file-name').textContent = `✓ ${allData.length}개의 문장 데이터가 로드되었습니다`;
+                    document.getElementById('file-name').classList.add('show');
+                    
+                    // Auto-start if triggered from start button
+                    if (autoStartAfterUpload) {
+                        autoStartAfterUpload = false;
+                        document.querySelector('.upload-section').style.display = 'none';
+                        showCategorySelection();
+                    }
+                    
+                    document.getElementById('start-btn').disabled = false;
+                } catch (error) {
+                    showError('파일을 읽는 중 오류가 발생했습니다: ' + error.message);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function showCategorySelection() {
+            const categories = {};
+            allData.forEach(item => {
+                const category = item['구분'];
+                if (!categories[category]) {
+                    categories[category] = 0;
+                }
+                categories[category]++;
+            });
+
+            const categoryKeys = Object.keys(categories).sort();
+            
+            let html = `
+                <div class="test-card">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h2 style="font-family: 'Spectral', serif; font-size: 2rem; color: var(--accent); margin-bottom: 10px;">
+                            학습할 구분을 선택하세요
+                        </h2>
+                        <p style="color: var(--text-secondary); font-size: 1rem;">
+                            총 <span style="color: var(--accent); font-weight: 600;">${allData.length}</span>개 문장 / 
+                            <span style="color: var(--accent); font-weight: 600;">${categoryKeys.length}</span>개 구분
+                        </p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+                            <button class="btn" onclick="showUnmemorizedChunks()" style="padding: 10px 25px; background: linear-gradient(135deg, var(--success) 0%, #38d9a9 100%);">
+                                🎯 외울 것 (30개씩)
+                            </button>
+                            <button class="btn btn-secondary" onclick="showCategories()" style="padding: 10px 25px;">
+                                📚 구분으로 보기
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="selection-content">
+                    </div>
+            `;
+
+            html += `
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn btn-secondary" onclick="location.reload()">
+                            파일 다시 선택
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('category-selection').innerHTML = html;
+            document.getElementById('category-selection').style.display = 'block';
+            
+            // Show unmemorized chunks by default after HTML is set
+            showUnmemorizedChunksContent();
+        }
+
+        function showUnmemorizedChunksContent() {
+            // Filter sentences that need to be memorized
+            const unmemorizedSentences = allData.filter(item => {
+                const memoryCount = item['외운것'];
+                return memoryCount === null || memoryCount === undefined || memoryCount === '' || parseInt(memoryCount) < 3;
+            });
+            
+            const chunkSize = 30;
+            let html = '<div class="category-grid">';
+            
+            for (let i = 0; i < unmemorizedSentences.length; i += chunkSize) {
+                const chunkSentences = unmemorizedSentences.slice(i, i + chunkSize);
+                const start = i + 1;
+                const end = Math.min(i + chunkSize, unmemorizedSentences.length);
+                
+                html += `
+                    <button class="category-btn" onclick="selectUnmemorizedChunk(${i}, ${i + chunkSize})">
+                        <div class="category-name">외울 것 ${start} ~ ${end}</div>
+                        <div class="category-count">${chunkSentences.length}개 문장</div>
+                    </button>
+                `;
+            }
+            
+            html += '</div>';
+            document.getElementById('selection-content').innerHTML = html;
+        }
+
+        function showUnmemorizedChunks() {
+            showUnmemorizedChunksContent();
+        }
+
+        function showCategories() {
+            const categories = {};
+            allData.forEach(item => {
+                const category = item['구분'];
+                if (!categories[category]) {
+                    categories[category] = 0;
+                }
+                categories[category]++;
+            });
+
+            const categoryKeys = Object.keys(categories).sort();
+            let html = '<div class="category-grid">';
+            
+            categoryKeys.forEach(category => {
+                html += `
+                    <button class="category-btn" onclick="selectCategory('${category}')">
+                        <div class="category-name">${category}</div>
+                        <div class="category-count">${categories[category]}개 문장</div>
+                    </button>
+                `;
+            });
+            
+            html += '</div>';
+            document.getElementById('selection-content').innerHTML = html;
+        }
+
+        function selectUnmemorizedChunk(startIdx, endIdx) {
+            const unmemorizedSentences = allData.filter(item => {
+                const memoryCount = item['외운것'];
+                return memoryCount === null || memoryCount === undefined || memoryCount === '' || parseInt(memoryCount) < 3;
+            });
+            
+            testData = unmemorizedSentences.slice(startIdx, endIdx);
+            selectedCategory = `외울 것 ${startIdx + 1} ~ ${Math.min(endIdx, unmemorizedSentences.length)}`;
+            
+            currentQuestion = 0;
+            userAnswers = new Array(testData.length).fill('');
+            scores = new Array(testData.length).fill(null);
+
+            document.getElementById('category-selection').style.display = 'none';
+            document.getElementById('test-area').style.display = 'block';
+            showQuestion();
+        }
+
+        function selectCategory(category) {
+            selectedCategory = category;
+            
+            testData = allData.filter(item => item['구분'] === category);
+            
+            currentQuestion = 0;
+            userAnswers = new Array(testData.length).fill('');
+            scores = new Array(testData.length).fill(null);
+
+            document.getElementById('category-selection').style.display = 'none';
+            document.getElementById('test-area').style.display = 'block';
+            showQuestion();
+        }
+
+        function showError(message) {
+            const testArea = document.getElementById('test-area');
+            testArea.innerHTML = `<div class="error-message">${message}</div>`;
+            testArea.style.display = 'block';
+        }
+
+        function showQuestion() {
+            const question = testData[currentQuestion];
+            const progress = ((currentQuestion + 1) / testData.length) * 100;
+            
+            const correctCount = scores.filter((s, idx) => idx < currentQuestion && s && s.score === 100).length;
+            const attemptedCount = scores.filter((s, idx) => idx < currentQuestion && s !== null).length;
+
+            const hasHint = question['힌트'] && question['힌트'].toString().trim() !== '';
+
+            const html = `
+                <div class="test-card">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div>
+                            <div class="question-number">문제 ${currentQuestion + 1} / ${testData.length}</div>
+                            <div class="category-badge">${selectedCategory}</div>
+                        </div>
+                        <div style="display: flex; gap: 15px; font-size: 0.95rem;">
+                            <div style="color: var(--success); font-weight: 600;">
+                                ✓ 맞춘 문제: ${correctCount}
+                            </div>
+                            <div style="color: var(--text-secondary);">
+                                📝 푼 문제: ${attemptedCount}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="korean-sentence">${question['한국어']}</div>
+                    
+                    ${hasHint ? `
+                        <button class="hint-button" onclick="toggleHint()">
+                            💡 힌트 보기
+                        </button>
+                        <div class="hint-content" id="hint-content">
+                            ${question['힌트']}
+                        </div>
+                    ` : ''}
+                    
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            class="answer-input" 
+                            id="answer-input"
+                            placeholder="영어 문장을 입력하세요..."
+                            value="${userAnswers[currentQuestion]}"
+                            autocomplete="off"
+                        />
+                    </div>
+                    
+                    <div id="feedback-area"></div>
+                    
+                    <div class="navigation">
+                        ${currentQuestion > 0 ? '<button class="btn btn-secondary" onclick="previousQuestion()">이전</button>' : ''}
+                        <button class="btn" onclick="checkAnswer()" id="submit-btn" ${scores[currentQuestion] !== null ? 'style="display:none"' : ''}>제출하기</button>
+                        ${currentQuestion < testData.length - 1 ? 
+                            `<button class="btn" onclick="nextQuestion()" id="next-btn" ${scores[currentQuestion] === null ? 'style="display:none"' : ''}>다음 문제</button>` : 
+                            `<button class="btn" onclick="showResults()" id="results-btn" ${scores[currentQuestion] === null ? 'style="display:none"' : ''}>결과 보기</button>`
+                        }
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('test-area').innerHTML = html;
+            document.getElementById('answer-input').focus();
+
+            document.getElementById('answer-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const submitBtn = document.getElementById('submit-btn');
+                    const nextBtn = document.getElementById('next-btn');
+                    const resultsBtn = document.getElementById('results-btn');
+                    
+                    if (submitBtn && submitBtn.style.display !== 'none') {
+                        checkAnswer();
+                    } else if (nextBtn && nextBtn.style.display !== 'none') {
+                        nextQuestion();
+                    } else if (resultsBtn && resultsBtn.style.display !== 'none') {
+                        showResults();
+                    }
+                }
+            });
+
+            if (scores[currentQuestion] !== null) {
+                const userAnswer = userAnswers[currentQuestion];
+                const correctAnswer = testData[currentQuestion]['영어'];
+                const score = scores[currentQuestion];
+                displayFeedback(userAnswer, correctAnswer, score);
+            }
+        }
+
+        function toggleHint() {
+            const hintContent = document.getElementById('hint-content');
+            const hintButton = document.querySelector('.hint-button');
+            
+            if (hintContent.classList.contains('show')) {
+                hintContent.classList.remove('show');
+                hintButton.classList.remove('active');
+                hintButton.innerHTML = '💡 힌트 보기';
+            } else {
+                hintContent.classList.add('show');
+                hintButton.classList.add('active');
+                hintButton.innerHTML = '💡 힌트 숨기기';
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answer-input').value.trim();
+            
+            if (!userAnswer) {
+                alert('답을 입력해주세요!');
+                return;
+            }
+
+            userAnswers[currentQuestion] = userAnswer;
+            const correctAnswer = testData[currentQuestion]['영어'];
+            const scoreData = calculateScore(userAnswer, correctAnswer);
+            
+            // Store userAnswer in scores object
+            scores[currentQuestion] = {
+                ...scoreData,
+                userAnswer: userAnswer
+            };
+
+            displayFeedback(userAnswer, correctAnswer, scoreData);
+            
+            const submitBtn = document.getElementById('submit-btn');
+            if (submitBtn) submitBtn.style.display = 'none';
+            
+            const nextBtn = document.getElementById('next-btn');
+            const resultsBtn = document.getElementById('results-btn');
+            if (nextBtn) nextBtn.style.display = 'inline-block';
+            if (resultsBtn) resultsBtn.style.display = 'inline-block';
+        }
+
+        function calculateScore(userAnswer, correctAnswer) {
+            const normalize = (str) => str.toLowerCase().replace(/[.,!?;:]/g, '').trim();
+            const userNorm = normalize(userAnswer);
+            const correctNorm = normalize(correctAnswer);
+
+            if (userNorm === correctNorm) {
+                return { score: 100, differences: [] };
+            }
+
+            const userWords = userNorm.split(/\s+/);
+            const correctWords = correctNorm.split(/\s+/);
+            
+            let matches = 0;
+            const differences = [];
+            const maxLength = Math.max(userWords.length, correctWords.length);
+
+            for (let i = 0; i < maxLength; i++) {
+                const userWord = userWords[i] || '';
+                const correctWord = correctWords[i] || '';
+
+                if (userWord === correctWord) {
+                    matches++;
+                } else {
+                    differences.push({
+                        position: i + 1,
+                        user: userWord || '(없음)',
+                        correct: correctWord || '(없음)'
+                    });
+                }
+            }
+
+            const score = Math.round((matches / maxLength) * 100);
+            return { score, differences };
+        }
+
+        function displayFeedback(userAnswer, correctAnswer, scoreData) {
+            const feedbackArea = document.getElementById('feedback-area');
+            const isCorrect = scoreData.score === 100;
+            
+            // Get hint if exists
+            const question = testData[currentQuestion];
+            const hasHint = question['힌트'] && question['힌트'].toString().trim() !== '';
+
+            let differencesHtml = '';
+            if (scoreData.differences.length > 0) {
+                differencesHtml = `
+                    <div class="differences">
+                        <div class="diff-label">틀린 부분:</div>
+                        ${scoreData.differences.map(diff => `
+                            <div class="diff-item">
+                                ${diff.position}번째 단어: 
+                                <span class="diff-wrong">${diff.user}</span> → 
+                                <span class="diff-right">${diff.correct}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            const scoreClass = scoreData.score === 100 ? 'perfect' : 
+                               scoreData.score >= 80 ? 'good' :
+                               scoreData.score >= 60 ? 'needs-work' : 'low';
+
+            feedbackArea.innerHTML = `
+                <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}">
+                    <div class="feedback-title">
+                        <span>${isCorrect ? '✅' : '❌'}</span>
+                        <span>${isCorrect ? '정답입니다!' : '다시 확인해보세요'}</span>
+                    </div>
+                    
+                    <div class="score-display ${scoreClass}">
+                        ${scoreData.score}점
+                    </div>
+                    
+                    <div class="comparison">
+                        <div class="comparison-row">
+                            <div class="comparison-label">당신의 답</div>
+                            <div class="comparison-text ${isCorrect ? 'correct' : 'error'}">${userAnswer}</div>
+                        </div>
+                        ${!isCorrect ? `
+                            <div class="comparison-row">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                    <div class="comparison-label">정답</div>
+                                    <button onclick="speakSentence(\`${correctAnswer.replace(/'/g, "\\'")}\`)" style="background: rgba(88, 166, 255, 0.15); border: 2px solid var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(88, 166, 255, 0.25)'" onmouseout="this.style.background='rgba(88, 166, 255, 0.15)'">
+                                        🔊 발음 듣기
+                                    </button>
+                                </div>
+                                <div class="comparison-text correct">${correctAnswer}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    ${differencesHtml}
+                    
+                    ${!isCorrect && hasHint ? `
+                        <div style="margin-top: 15px; background: rgba(255, 169, 77, 0.15); border: 2px solid var(--hint); border-radius: 10px; padding: 15px 20px;">
+                            <div style="font-size: 0.85rem; color: var(--hint); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">
+                                💡 힌트
+                            </div>
+                            <div style="color: var(--hint); font-size: 1.1rem; line-height: 1.6;">
+                                ${question['힌트']}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < testData.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        }
+
+        function showResults() {
+            const totalScore = scores.reduce((sum, s) => sum + s.score, 0);
+            const averageScore = Math.round(totalScore / scores.length);
+            const perfectCount = scores.filter(s => s.score === 100).length;
+            const goodCount = scores.filter(s => s.score >= 80 && s.score < 100).length;
+
+            const scoreClass = averageScore === 100 ? 'perfect' : 
+                              averageScore >= 80 ? 'good' :
+                              averageScore >= 60 ? 'needs-work' : 'low';
+
+            let resultsHtml = `
+                <div class="test-card">
+                    <div class="feedback-title" style="justify-content: center; font-size: 1.5rem; margin-bottom: 20px;">
+                        🎉 테스트 완료!
+                    </div>
+                    
+                    <div class="category-badge" style="display: block; text-align: center; font-size: 1rem;">
+                        ${selectedCategory}
+                    </div>
+                    
+                    <div class="score-display ${scoreClass}" style="font-size: 4rem; margin: 30px 0;">
+                        ${averageScore}점
+                    </div>
+                    
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${scores.length}</div>
+                            <div class="stat-label">총 문제</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" style="color: var(--success);">${perfectCount}</div>
+                            <div class="stat-label">완벽한 답 (100점)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${goodCount}</div>
+                            <div class="stat-label">좋은 답 (80점 이상)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" style="color: var(--warning);">${scores.length - perfectCount - goodCount}</div>
+                            <div class="stat-label">보통 답 (80점 미만)</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 40px;">
+                        <div style="font-size: 1.3rem; font-weight: 600; margin-bottom: 20px; text-align: center;">
+                            문제별 점수
+                        </div>
+            `;
+
+            scores.forEach((scoreData, index) => {
+                const question = testData[index];
+                const barWidth = scoreData.score;
+                const barColor = scoreData.score === 100 ? 'var(--success)' : 
+                                scoreData.score >= 80 ? 'var(--accent)' :
+                                scoreData.score >= 60 ? 'var(--warning)' : 'var(--error)';
+
+                resultsHtml += `
+                    <div style="margin: 15px 0; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <div style="font-size: 0.9rem; color: var(--text-secondary);">문제 ${index + 1}</div>
+                            <div style="font-weight: 700; color: ${barColor};">${scoreData.score}점 ${scoreData.score === 100 ? '✓' : ''}</div>
+                        </div>
+                        <div style="font-size: 0.95rem; margin-bottom: 8px; color: var(--text-secondary);">${question['한국어']}</div>
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 5px;">정답:</div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                                <div style="font-size: 1.05rem; color: var(--success); font-family: 'Crimson Text', serif; flex: 1; font-weight: 600;">
+                                    ${question['영어']}
+                                </div>
+                                <button onclick="speakSentence(\`${question['영어'].replace(/'/g, "\\'")}\`)" style="background: rgba(88, 166, 255, 0.15); border: 2px solid var(--accent); color: var(--accent); padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 0.95rem; transition: all 0.3s ease; white-space: nowrap;" onmouseover="this.style.background='rgba(88, 166, 255, 0.25)'" onmouseout="this.style.background='rgba(88, 166, 255, 0.15)'">
+                                    🔊
+                                </button>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 5px;">나의 답:</div>
+                            <div style="font-size: 1.05rem; color: ${scoreData.score === 100 ? 'var(--success)' : scoreData.score >= 80 ? 'var(--accent)' : 'var(--error)'}; font-family: 'Crimson Text', serif; font-weight: 600;">
+                                ${scoreData.userAnswer || '(답 없음)'}
+                            </div>
+                        </div>
+                        <div style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: ${barWidth}%; background: ${barColor}; transition: width 0.4s ease;"></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            resultsHtml += `
+                    </div>
+                    
+                    <div class="navigation" style="margin-top: 40px;">
+                        <button class="btn btn-secondary" onclick="backToCategorySelection()">처음으로</button>
+                        <button class="btn btn-secondary" onclick="reviewAnswers()">답안 복습하기</button>
+                        <button class="btn" onclick="downloadResults()" style="background: linear-gradient(135deg, var(--success) 0%, #38d9a9 100%);">
+                            📥 결과 다운로드
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('test-area').innerHTML = resultsHtml;
+        }
+
+        function reviewAnswers() {
+            currentQuestion = 0;
+            showQuestion();
+        }
+
+        function backToCategorySelection() {
+            document.getElementById('test-area').style.display = 'none';
+            document.getElementById('category-selection').style.display = 'block';
+            
+            // Reset test data
+            testData = [];
+            currentQuestion = 0;
+            userAnswers = [];
+            scores = [];
+            selectedCategory = '';
+        }
+
+        function downloadResults() {
+            // Prepare data for Excel
+            const today = new Date();
+            const dateStr = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+            
+            const resultsData = testData.map((item, index) => {
+                const scoreData = scores[index];
+                const score = scoreData.score;
+                const memoryCount = score >= 89 ? 1 : 0; // 89점 이상이면 1, 아니면 0
+                
+                return {
+                    'No': item['No'] || (index + 1),
+                    '영어': item['영어'],
+                    '날짜': dateStr,
+                    '외운것': memoryCount,
+                    '점수': score
+                };
+            });
+
+            // Create worksheet
+            const ws = XLSX.utils.json_to_sheet(resultsData);
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, '학습결과');
+            
+            // Generate filename with date and category
+            const filename = `sentence_results_${selectedCategory.replace(/[^a-zA-Z0-9가-힣]/g, '_')}_${dateStr}.xlsx`;
+            
+            // Download
+            XLSX.writeFile(wb, filename);
+        }
+
+        function speakSentence(sentence) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(sentence);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                utterance.pitch = 1.0;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('죄송합니다. 이 브라우저는 음성 재생을 지원하지 않습니다.');
+            }
+        }
+    </script>
+</body>
+</html>

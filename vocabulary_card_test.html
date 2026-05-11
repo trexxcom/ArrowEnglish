@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Card Test</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:wght@400;600;700&family=Crimson+Text:ital@0;1&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #1a1625;
+            --bg-secondary: #251e35;
+            --accent: #c77dff;
+            --accent-glow: rgba(199, 125, 255, 0.3);
+            --text-primary: #f5f1ff;
+            --text-secondary: #a89cc9;
+            --error: #ff6b9d;
+            --success: #5dfdcb;
+            --warning: #ffd97d;
+            --hint: #ffa94d;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #2a1f3d 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 15% 25%, rgba(199, 125, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 85% 75%, rgba(93, 253, 203, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent) 0%, #9d4edd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 300;
+            font-family: 'Crimson Text', serif;
+            font-style: italic;
+        }
+
+        .upload-section {
+            background: var(--bg-secondary);
+            border: 2px dashed var(--accent);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        .upload-section:hover {
+            border-color: #e0aaff;
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .upload-group {
+            margin-bottom: 30px;
+        }
+
+        .upload-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .upload-label-text {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            display: block;
+            font-weight: 600;
+        }
+
+        .upload-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent) 0%, #9d4edd 100%);
+            color: #1a1625;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans KR', sans-serif;
+            box-shadow: 0 4px 15px rgba(199, 125, 255, 0.4);
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(199, 125, 255, 0.6);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent);
+            box-shadow: 0 4px 15px rgba(199, 125, 255, 0.3);
+        }
+
+        .file-name {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(93, 253, 203, 0.1);
+            border-radius: 8px;
+            color: var(--success);
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .file-name.show {
+            display: block;
+        }
+
+        .test-card {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .category-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(199, 125, 255, 0.3);
+            color: var(--text-primary);
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans KR', sans-serif;
+            text-align: left;
+        }
+
+        .category-btn:hover {
+            background: rgba(199, 125, 255, 0.15);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .category-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .category-range {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .category-count {
+            font-size: 0.9rem;
+            color: var(--success);
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card-image-wrapper {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .question-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: rgba(199, 125, 255, 0.2);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .meaning-box {
+            background: linear-gradient(135deg, rgba(199, 125, 255, 0.15) 0%, rgba(157, 78, 221, 0.1) 100%);
+            border-left: 4px solid var(--accent);
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .meaning-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .meaning-text {
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .hint-button {
+            background: rgba(255, 169, 77, 0.15);
+            border: 2px solid var(--hint);
+            color: var(--hint);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+        }
+
+        .hint-button:hover {
+            background: rgba(255, 169, 77, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .hint-button.active {
+            background: rgba(255, 169, 77, 0.3);
+        }
+
+        .hint-content {
+            display: none;
+            background: rgba(255, 169, 77, 0.1);
+            border: 1px solid rgba(255, 169, 77, 0.3);
+            border-radius: 10px;
+            padding: 15px 20px;
+            color: var(--hint);
+            font-size: 1.1rem;
+            animation: slideDown 0.3s ease-out;
+            line-height: 1.6;
+        }
+
+        .hint-content.show {
+            display: block;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 18px 20px;
+            font-size: 1.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'Crimson Text', serif;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+            background: rgba(199, 125, 255, 0.08);
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .feedback.correct {
+            background: rgba(93, 253, 203, 0.15);
+            border: 2px solid var(--success);
+        }
+
+        .feedback.incorrect {
+            background: rgba(255, 107, 157, 0.15);
+            border: 2px solid var(--error);
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .comparison-row {
+            padding: 12px 15px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+        }
+
+        .comparison-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .comparison-text {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.15rem;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+        }
+
+        .comparison-text.error {
+            color: var(--error);
+        }
+
+        .comparison-text.correct {
+            color: var(--success);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent) 0%, #9d4edd 100%);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-message {
+            background: rgba(255, 107, 157, 0.15);
+            border: 2px solid var(--error);
+            color: var(--error);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        @media (max-width: 900px) {
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Vocabulary Cards</h1>
+            <p class="subtitle">이미지 카드로 배우는 영어 단어</p>
+        </header>
+
+        <div id="app">
+            <div class="upload-section">
+                <div class="upload-group">
+                    <label class="upload-label-text">📁 단어 카드 이미지 폴더</label>
+                    <p class="upload-description">0001-1.jpg ~ 2502-1.jpg 형식의 이미지 파일들</p>
+                    <p class="upload-description" style="font-size: 0.85rem; color: var(--warning); margin-top: 5px;">
+                        💡 업로드 또는 HTML 파일과 같은 폴더의 'images' 폴더에 이미지 저장
+                    </p>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="images-upload" webkitdirectory directory multiple accept="image/*" />
+                        <button class="btn" onclick="document.getElementById('images-upload').click()">
+                            이미지 폴더 선택
+                        </button>
+                    </div>
+                    <div class="file-name" id="images-file-name"></div>
+                </div>
+
+                <div class="upload-group">
+                    <label class="upload-label-text">📊 단어 데이터 엑셀 파일</label>
+                    <p class="upload-description">'No', '구분', '뜻', '힌트', '영어단어' 열이 포함된 엑셀 파일</p>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="excel-upload" accept=".xlsx,.xls,.csv" />
+                        <button class="btn" onclick="document.getElementById('excel-upload').click()">
+                            엑셀 파일 선택
+                        </button>
+                    </div>
+                    <div class="file-name" id="excel-file-name"></div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <button class="btn" id="start-btn" onclick="startTest()">
+                        학습 시작하기
+                    </button>
+                </div>
+            </div>
+
+            <div id="category-selection" style="display: none;"></div>
+            <div id="test-area" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        let imageFiles = {};
+        let excelData = [];
+        let testData = [];
+        let currentQuestion = 0;
+        let userAnswers = [];
+        let scores = [];
+        let selectedCategory = '';
+
+        document.getElementById('images-upload').addEventListener('change', handleImagesUpload);
+        document.getElementById('excel-upload').addEventListener('change', handleExcelUpload);
+
+        function handleImagesUpload(e) {
+            const files = e.target.files;
+            if (files.length === 0) return;
+
+            imageFiles = {};
+            for (let file of files) {
+                const match = file.name.match(/^(\d+)-\d+\.(jpg|jpeg|png)$/i);
+                if (match) {
+                    const num = parseInt(match[1]);
+                    imageFiles[num] = file;
+                }
+            }
+
+            const count = Object.keys(imageFiles).length;
+            console.log(`이미지 로드 완료: ${count}개`);
+            console.log('이미지 번호:', Object.keys(imageFiles).sort((a, b) => a - b).slice(0, 10));
+            
+            document.getElementById('images-file-name').textContent = `✓ ${count}개의 이미지 파일이 선택되었습니다`;
+            document.getElementById('images-file-name').classList.add('show');
+            
+            checkReadyToStart();
+        }
+
+        function handleExcelUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Check filename if triggered from start button
+            if (autoStartAfterUpload) {
+                const htmlFileName = window.location.pathname.split('/').pop().replace('.html', '');
+                const expectedXlsx = htmlFileName + '.xlsx';
+                const expectedCsv = htmlFileName + '.csv';
+                
+                if (file.name !== expectedXlsx && file.name !== expectedCsv) {
+                    const proceed = confirm(
+                        `⚠️ 파일명이 다릅니다!\n\n` +
+                        `예상 파일명: ${expectedXlsx} 또는 ${expectedCsv}\n` +
+                        `선택한 파일: ${file.name}\n\n` +
+                        `계속 진행하시겠습니까?`
+                    );
+                    
+                    if (!proceed) {
+                        autoStartAfterUpload = false;
+                        e.target.value = ''; // Reset file input
+                        return;
+                    }
+                }
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+
+                    if (jsonData.length === 0) {
+                        showError('엑셀 파일에 데이터가 없습니다.');
+                        return;
+                    }
+
+                    excelData = jsonData;
+                    
+                    // Filter out words with '외운것' >= 3 if column exists
+                    if (excelData.length > 0 && excelData[0].hasOwnProperty('외운것')) {
+                        const originalCount = excelData.length;
+                        excelData = excelData.filter(item => {
+                            const memoryCount = item['외운것'];
+                            return memoryCount === null || memoryCount === undefined || memoryCount === '' || parseInt(memoryCount) < 3;
+                        });
+                        const filteredCount = originalCount - excelData.length;
+                        if (filteredCount > 0) {
+                            console.log(`${filteredCount}개의 단어가 필터링되었습니다 (외운것 >= 3)`);
+                        }
+                    }
+                    
+                    document.getElementById('excel-file-name').textContent = `✓ ${excelData.length}개의 단어 데이터가 로드되었습니다`;
+                    document.getElementById('excel-file-name').classList.add('show');
+                    
+                    // Auto-start if triggered from start button
+                    if (autoStartAfterUpload) {
+                        autoStartAfterUpload = false;
+                        document.querySelector('.upload-section').style.display = 'none';
+                        showCategorySelection();
+                    }
+                    
+                    checkReadyToStart();
+                } catch (error) {
+                    showError('엑셀 파일을 읽는 중 오류가 발생했습니다: ' + error.message);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function checkReadyToStart() {
+            // Start button is always enabled - will auto-load or prompt for file
+            document.getElementById('start-btn').disabled = false;
+        }
+
+        function startTest() {
+            // If Excel data is already loaded, proceed
+            if (excelData.length > 0) {
+                document.querySelector('.upload-section').style.display = 'none';
+                showCategorySelection();
+                return;
+            }
+            
+            // Set flag to auto-start after file selection
+            autoStartAfterUpload = true;
+            // Trigger file selection
+            document.getElementById('excel-upload').click();
+        }
+        
+        // Auto-start after file upload
+        let autoStartAfterUpload = false;
+
+        function showCategorySelection() {
+            const categories = {};
+            
+            excelData.forEach(item => {
+                const category = item['구분'];
+                const no = item['No'];
+                
+                if (!categories[category]) {
+                    categories[category] = {
+                        count: 0,
+                        minNo: no,
+                        maxNo: no
+                    };
+                }
+                
+                categories[category].count++;
+                if (no < categories[category].minNo) categories[category].minNo = no;
+                if (no > categories[category].maxNo) categories[category].maxNo = no;
+            });
+
+            const categoryKeys = Object.keys(categories).sort();
+            
+            let html = `
+                <div class="test-card">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--accent); margin-bottom: 10px;">
+                            학습할 단어 구분을 선택하세요
+                        </h2>
+                        <p style="color: var(--text-secondary); font-size: 1rem;">
+                            총 <span style="color: var(--accent); font-weight: 600;">${excelData.length}</span>개 단어 / 
+                            <span style="color: var(--accent); font-weight: 600;">${categoryKeys.length}</span>개 구분
+                        </p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+                            <button class="btn" onclick="showUnmemorizedChunks()" style="padding: 10px 25px; background: linear-gradient(135deg, var(--success) 0%, #38d9a9 100%);">
+                                🎯 외울 것 (60개씩)
+                            </button>
+                            <button class="btn" onclick="showRandomTest()" style="padding: 10px 25px; background: linear-gradient(135deg, #ffd97d 0%, #ffb347 100%); color: #1a1625;">
+                                🎲 랜덤 테스트
+                            </button>
+                            <button class="btn" onclick="showNumberRanges()" style="padding: 10px 25px;">
+                                🔢 숫자 구분으로 보기
+                            </button>
+                            <button class="btn btn-secondary" onclick="showWordCategories()" style="padding: 10px 25px;">
+                                📚 단어 구분으로 보기
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="selection-content">
+                    </div>
+            `;
+
+            html += `
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn btn-secondary" onclick="location.reload()">
+                            파일 다시 선택
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('category-selection').innerHTML = html;
+            document.getElementById('category-selection').style.display = 'block';
+            
+            // Show unmemorized chunks by default after HTML is set
+            showUnmemorizedChunksContent();
+        }
+
+        function showUnmemorizedChunksContent() {
+            // Filter words that need to be memorized (외운것 < 3 or doesn't exist)
+            const unmemorizedWords = excelData.filter(item => {
+                const memoryCount = item['외운것'];
+                return memoryCount === null || memoryCount === undefined || memoryCount === '' || parseInt(memoryCount) < 3;
+            });
+            
+            const chunkSize = 60;
+            let html = '<div class="category-grid">';
+            
+            for (let i = 0; i < unmemorizedWords.length; i += chunkSize) {
+                const chunkWords = unmemorizedWords.slice(i, i + chunkSize);
+                const start = i + 1;
+                const end = Math.min(i + chunkSize, unmemorizedWords.length);
+                const firstNo = chunkWords[0]['No'];
+                const lastNo = chunkWords[chunkWords.length - 1]['No'];
+                
+                html += `
+                    <button class="category-btn" onclick="selectUnmemorizedChunk(${i}, ${i + chunkSize})">
+                        <div class="category-name">외울 것 ${start} ~ ${end}</div>
+                        <div class="category-range">No. ${firstNo} ~ ${lastNo}</div>
+                        <div class="category-count">${chunkWords.length}개 단어</div>
+                    </button>
+                `;
+            }
+            
+            html += '</div>';
+            document.getElementById('selection-content').innerHTML = html;
+        }
+
+        function showUnmemorizedChunks() {
+            showUnmemorizedChunksContent();
+        }
+
+        function selectUnmemorizedChunk(startIdx, endIdx) {
+            // Filter unmemorized words again and select the chunk
+            const unmemorizedWords = excelData.filter(item => {
+                const memoryCount = item['외운것'];
+                return memoryCount === null || memoryCount === undefined || memoryCount === '' || parseInt(memoryCount) < 3;
+            });
+            
+            testData = unmemorizedWords.slice(startIdx, endIdx);
+            selectedCategory = `외울 것 ${startIdx + 1} ~ ${Math.min(endIdx, unmemorizedWords.length)}`;
+            
+            currentQuestion = 0;
+            userAnswers = new Array(testData.length).fill('');
+            scores = new Array(testData.length).fill(null);
+
+            document.getElementById('category-selection').style.display = 'none';
+            document.getElementById('test-area').style.display = 'block';
+            showQuestion();
+        }
+
+        function showRandomTest() {
+            let html = '<div class="category-grid">';
+            
+            // Random test options
+            const randomOptions = [
+                { count: 10, label: '10개 랜덤' },
+                { count: 20, label: '20개 랜덤' },
+                { count: 30, label: '30개 랜덤' },
+                { count: 50, label: '50개 랜덤' },
+                { count: 60, label: '60개 랜덤' }
+            ];
+            
+            randomOptions.forEach(option => {
+                const availableCount = Math.min(option.count, excelData.length);
+                html += `
+                    <button class="category-btn" onclick="selectRandomTest(${option.count})">
+                        <div class="category-name">🎲 ${option.label}</div>
+                        <div class="category-count">${availableCount}개 단어</div>
+                    </button>
+                `;
+            });
+            
+            html += '</div>';
+            document.getElementById('selection-content').innerHTML = html;
+        }
+
+        function selectRandomTest(count) {
+            // Shuffle array and select random items
+            const shuffled = [...excelData].sort(() => Math.random() - 0.5);
+            testData = shuffled.slice(0, Math.min(count, excelData.length));
+            selectedCategory = `랜덤 테스트 ${testData.length}개`;
+            
+            currentQuestion = 0;
+            userAnswers = new Array(testData.length).fill('');
+            scores = new Array(testData.length).fill(null);
+
+            document.getElementById('category-selection').style.display = 'none';
+            document.getElementById('test-area').style.display = 'block';
+            showQuestion();
+        }
+
+        function showNumberRanges() {
+            const maxNo = Math.max(...excelData.map(item => item['No']));
+            const rangeSize = 60;
+            
+            let html = '<div class="category-grid">';
+            
+            for (let start = 1; start <= maxNo; start += rangeSize) {
+                const end = Math.min(start + rangeSize - 1, maxNo);
+                const wordsInRange = excelData.filter(item => item['No'] >= start && item['No'] <= end);
+                
+                if (wordsInRange.length > 0) {
+                    html += `
+                        <button class="category-btn" onclick="selectNumberRange(${start}, ${end})">
+                            <div class="category-name">No. ${start} ~ ${end}</div>
+                            <div class="category-count">${wordsInRange.length}개 단어</div>
+                        </button>
+                    `;
+                }
+            }
+            
+            html += '</div>';
+            document.getElementById('selection-content').innerHTML = html;
+        }
+
+        function showWordCategories() {
+            const categories = {};
+            
+            excelData.forEach(item => {
+                const category = item['구분'];
+                const no = item['No'];
+                
+                if (!categories[category]) {
+                    categories[category] = {
+                        count: 0,
+                        minNo: no,
+                        maxNo: no
+                    };
+                }
+                
+                categories[category].count++;
+                if (no < categories[category].minNo) categories[category].minNo = no;
+                if (no > categories[category].maxNo) categories[category].maxNo = no;
+            });
+
+            const categoryKeys = Object.keys(categories).sort();
+            
+            let html = '<div class="category-grid">';
+            
+            categoryKeys.forEach(category => {
+                const info = categories[category];
+                html += `
+                    <button class="category-btn" onclick="selectCategory('${category}')">
+                        <div class="category-name">${category}</div>
+                        <div class="category-range">No. ${info.minNo} ~ ${info.maxNo}</div>
+                        <div class="category-count">${info.count}개 단어</div>
+                    </button>
+                `;
+            });
+            
+            html += '</div>';
+            document.getElementById('selection-content').innerHTML = html;
+        }
+
+        function selectNumberRange(start, end) {
+            selectedCategory = `No. ${start} ~ ${end}`;
+            testData = excelData.filter(item => item['No'] >= start && item['No'] <= end);
+            
+            currentQuestion = 0;
+            userAnswers = new Array(testData.length).fill('');
+            scores = new Array(testData.length).fill(null);
+
+            document.getElementById('category-selection').style.display = 'none';
+            document.getElementById('test-area').style.display = 'block';
+            showQuestion();
+        }
+
+        function selectCategory(category) {
+            selectedCategory = category;
+            testData = excelData.filter(item => item['구분'] === category);
+            
+            currentQuestion = 0;
+            userAnswers = new Array(testData.length).fill('');
+            scores = new Array(testData.length).fill(null);
+
+            document.getElementById('category-selection').style.display = 'none';
+            document.getElementById('test-area').style.display = 'block';
+            showQuestion();
+        }
+
+        function showError(message) {
+            alert(message);
+        }
+
+        async function showQuestion() {
+            const question = testData[currentQuestion];
+            const progress = ((currentQuestion + 1) / testData.length) * 100;
+            const correctCount = scores.filter((s, idx) => idx < currentQuestion && s && s.correct).length;
+            const attemptedCount = scores.filter((s, idx) => idx < currentQuestion && s !== null).length;
+
+            const no = question['No'];
+            let imageUrl = '';
+            
+            // Try to get image from uploaded files first
+            const imageFile = imageFiles[no];
+            
+            if (imageFile) {
+                imageUrl = URL.createObjectURL(imageFile);
+                console.log(`문제 No.${no} - 업로드된 이미지 사용`);
+            } else {
+                // Try to load from images folder with 4-digit padding
+                const paddedNo = String(no).padStart(4, '0');
+                imageUrl = `images/${paddedNo}-1.jpg`;
+                console.log(`문제 No.${no} - images 폴더에서 로드 시도: ${imageUrl}`);
+            }
+
+            const hasHint = question['힌트'] && question['힌트'].toString().trim() !== '';
+
+            const html = `
+                <div class="test-card">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    
+                    <div class="question-header">
+                        <div>
+                            <div class="question-number">문제 ${currentQuestion + 1} / ${testData.length}</div>
+                            <div class="category-badge">${selectedCategory} - No.${no}</div>
+                        </div>
+                        <div style="display: flex; gap: 15px; font-size: 0.95rem;">
+                            <div style="color: var(--success); font-weight: 600;">
+                                ✓ 맞춘 단어: ${correctCount}
+                            </div>
+                            <div style="color: var(--text-secondary);">
+                                📝 푼 문제: ${attemptedCount}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-container">
+                        <div class="card-image-wrapper">
+                            ${imageUrl ? `<img src="${imageUrl}" alt="Word Card ${no}" class="card-image" />` : 
+                              '<div style="color: #666; text-align: center; padding: 40px;">이미지 없음</div>'}
+                        </div>
+                        
+                        <div class="card-content">
+                            <div class="meaning-box">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <div class="meaning-label">한글 뜻</div>
+                                    <button onclick="speakWord('${question['영어단어']}')" style="background: rgba(199, 125, 255, 0.15); border: 2px solid var(--accent); color: var(--accent); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(199, 125, 255, 0.25)'" onmouseout="this.style.background='rgba(199, 125, 255, 0.15)'">
+                                        🔊 발음 듣기
+                                    </button>
+                                </div>
+                                <div class="meaning-text">${question['뜻']}</div>
+                            </div>
+                            
+                            ${hasHint ? `
+                                <div>
+                                    <button class="hint-button" onclick="toggleHint()">
+                                        💡 어원 힌트 보기
+                                    </button>
+                                    <div class="hint-content" id="hint-content">
+                                        ${question['힌트']}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${question['영어문장'] ? `
+                                <div style="background: rgba(93, 253, 203, 0.1); border: 1px solid rgba(93, 253, 203, 0.3); border-radius: 10px; padding: 15px 20px; color: var(--success); font-size: 1.1rem; line-height: 1.6; font-family: 'Crimson Text', serif; font-style: italic;">
+                                    <div style="font-size: 0.85rem; color: var(--success); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-family: 'Noto Sans KR', sans-serif; font-style: normal;">📝 문장 힌트</div>
+                                    ${question['영어문장']}
+                                </div>
+                            ` : ''}
+                            
+                            <div>
+                                <input 
+                                    type="text" 
+                                    class="answer-input" 
+                                    id="answer-input"
+                                    placeholder="영어 단어를 입력하세요..."
+                                    value="${userAnswers[currentQuestion]}"
+                                    autocomplete="off"
+                                />
+                            </div>
+                            
+                            <div id="feedback-area"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="navigation">
+                        ${currentQuestion > 0 ? '<button class="btn btn-secondary" onclick="previousQuestion()">이전</button>' : ''}
+                        <button class="btn" onclick="checkAnswer()" id="submit-btn" ${scores[currentQuestion] !== null ? 'style="display:none"' : ''}>제출하기</button>
+                        ${currentQuestion < testData.length - 1 ? 
+                            `<button class="btn" onclick="nextQuestion()" id="next-btn" ${scores[currentQuestion] === null ? 'style="display:none"' : ''}>다음 문제</button>` : 
+                            `<button class="btn" onclick="showResults()" id="results-btn" ${scores[currentQuestion] === null ? 'style="display:none"' : ''}>결과 보기</button>`
+                        }
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('test-area').innerHTML = html;
+            document.getElementById('answer-input').focus();
+
+            document.getElementById('answer-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const submitBtn = document.getElementById('submit-btn');
+                    const nextBtn = document.getElementById('next-btn');
+                    const resultsBtn = document.getElementById('results-btn');
+                    
+                    if (submitBtn && submitBtn.style.display !== 'none') {
+                        checkAnswer();
+                    } else if (nextBtn && nextBtn.style.display !== 'none') {
+                        nextQuestion();
+                    } else if (resultsBtn && resultsBtn.style.display !== 'none') {
+                        showResults();
+                    }
+                }
+            });
+
+            if (scores[currentQuestion] !== null) {
+                const userAnswer = userAnswers[currentQuestion];
+                const correctAnswer = testData[currentQuestion]['영어단어'];
+                const score = scores[currentQuestion];
+                displayFeedback(userAnswer, correctAnswer, score);
+            }
+        }
+
+        function toggleHint() {
+            const hintContent = document.getElementById('hint-content');
+            const hintButton = document.querySelector('.hint-button');
+            
+            if (hintContent.classList.contains('show')) {
+                hintContent.classList.remove('show');
+                hintButton.classList.remove('active');
+                hintButton.innerHTML = '💡 어원 힌트 보기';
+            } else {
+                hintContent.classList.add('show');
+                hintButton.classList.add('active');
+                hintButton.innerHTML = '💡 힌트 숨기기';
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answer-input').value.trim();
+            
+            if (!userAnswer) {
+                alert('단어를 입력해주세요!');
+                return;
+            }
+
+            userAnswers[currentQuestion] = userAnswer;
+            const correctAnswer = testData[currentQuestion]['영어단어'];
+            const score = evaluateAnswer(userAnswer, correctAnswer);
+            scores[currentQuestion] = score;
+
+            displayFeedback(userAnswer, correctAnswer, score);
+            
+            const submitBtn = document.getElementById('submit-btn');
+            if (submitBtn) submitBtn.style.display = 'none';
+            
+            const nextBtn = document.getElementById('next-btn');
+            const resultsBtn = document.getElementById('results-btn');
+            if (nextBtn) nextBtn.style.display = 'inline-block';
+            if (resultsBtn) resultsBtn.style.display = 'inline-block';
+        }
+
+        function evaluateAnswer(userAnswer, correctAnswer) {
+            const userNorm = userAnswer.toLowerCase().trim();
+            const correctNorm = correctAnswer.toLowerCase().trim();
+            
+            return {
+                correct: userNorm === correctNorm,
+                userAnswer: userAnswer,
+                correctAnswer: correctAnswer
+            };
+        }
+
+        function displayFeedback(userAnswer, correctAnswer, score) {
+            const feedbackArea = document.getElementById('feedback-area');
+            const isCorrect = score.correct;
+            
+            // If wrong and hint exists, show the hint automatically
+            const question = testData[currentQuestion];
+            const hasHint = question['힌트'] && question['힌트'].toString().trim() !== '';
+            const pronunciation = question['발음'] || '';
+
+            feedbackArea.innerHTML = `
+                <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}">
+                    <div class="feedback-title">
+                        <span>${isCorrect ? '✅' : '❌'}</span>
+                        <span>${isCorrect ? '정답입니다!' : '아쉽습니다!'}</span>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comparison-label">당신의 답</div>
+                        <div class="comparison-text ${isCorrect ? 'correct' : 'error'}">${userAnswer}</div>
+                    </div>
+                    ${!isCorrect ? `
+                        <div class="comparison-row">
+                            <div class="comparison-label">정답</div>
+                            <div class="comparison-text correct">${correctAnswer}</div>
+                            ${pronunciation ? `
+                                <div style="font-size: 1rem; color: var(--text-secondary); margin-top: 8px; font-family: 'Crimson Text', serif;">
+                                    ${pronunciation}
+                                </div>
+                            ` : ''}
+                        </div>
+                        ${hasHint ? `
+                            <div style="margin-top: 15px; background: rgba(255, 169, 77, 0.15); border: 2px solid var(--hint); border-radius: 10px; padding: 15px 20px;">
+                                <div style="font-size: 0.85rem; color: var(--hint); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">
+                                    💡 어원 힌트
+                                </div>
+                                <div style="color: var(--hint); font-size: 1.1rem; line-height: 1.6;">
+                                    ${question['힌트']}
+                                </div>
+                            </div>
+                        ` : ''}
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < testData.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        }
+
+        function showResults() {
+            const correctCount = scores.filter(s => s.correct).length;
+            const totalCount = scores.length;
+            const percentage = Math.round((correctCount / totalCount) * 100);
+
+            let resultsHtml = `
+                <div class="test-card">
+                    <div class="feedback-title" style="justify-content: center; font-size: 1.5rem; margin-bottom: 20px;">
+                        🎉 테스트 완료!
+                    </div>
+                    
+                    <div class="category-badge" style="display: block; text-align: center; font-size: 1rem; margin-bottom: 30px;">
+                        ${selectedCategory}
+                    </div>
+                    
+                    <div style="text-align: center; font-size: 4rem; font-weight: 700; font-family: 'Playfair Display', serif; margin: 30px 0;">
+                        <span style="color: var(--success);">${correctCount}</span>
+                        <span style="color: var(--text-secondary);"> / </span>
+                        <span style="color: var(--accent);">${totalCount}</span>
+                    </div>
+                    
+                    <div style="text-align: center; font-size: 1.3rem; color: var(--text-secondary); margin-bottom: 30px;">
+                        정확도: ${percentage}%
+                    </div>
+                    
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${totalCount}</div>
+                            <div class="stat-label">총 단어</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" style="color: var(--success);">${correctCount}</div>
+                            <div class="stat-label">맞춘 단어</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" style="color: var(--error);">${totalCount - correctCount}</div>
+                            <div class="stat-label">틀린 단어</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${percentage}%</div>
+                            <div class="stat-label">정확도</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 40px;">
+                        <div style="font-size: 1.3rem; font-weight: 600; margin-bottom: 20px; text-align: center;">
+                            단어별 결과
+                        </div>
+            `;
+
+            scores.forEach((score, index) => {
+                const question = testData[index];
+                const icon = score.correct ? '✓' : '✗';
+                const color = score.correct ? 'var(--success)' : 'var(--error)';
+
+                resultsHtml += `
+                    <div style="margin: 15px 0; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 10px; border-left: 4px solid ${color};">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div style="font-size: 0.9rem; color: var(--text-secondary);">No.${question['No']} - ${question['뜻']}</div>
+                            <div style="font-size: 1.2rem; color: ${color};">${icon}</div>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 5px;">정답:</div>
+                            <div style="font-family: 'Crimson Text', serif; font-size: 1.3rem; color: var(--success); font-weight: 600;">
+                                ${question['영어단어']}
+                            </div>
+                        </div>
+                        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <span style="color: var(--text-secondary); font-size: 0.9rem;">나의 답: </span>
+                            <span style="color: ${score.correct ? 'var(--success)' : 'var(--error)'}; font-family: 'Crimson Text', serif; font-size: 1.1rem; font-weight: 600;">
+                                ${score.userAnswer}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            resultsHtml += `
+                    </div>
+                    
+                    <div class="navigation" style="margin-top: 40px;">
+                        <button class="btn btn-secondary" onclick="backToCategorySelection()">처음으로</button>
+                        <button class="btn" onclick="downloadResults()" style="background: linear-gradient(135deg, var(--success) 0%, #38d9a9 100%);">
+                            📥 결과 다운로드
+                        </button>
+                        <button class="btn" onclick="reviewAnswers()">복습하기</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('test-area').innerHTML = resultsHtml;
+        }
+
+        function reviewAnswers() {
+            currentQuestion = 0;
+            showQuestion();
+        }
+
+        function backToCategorySelection() {
+            document.getElementById('test-area').style.display = 'none';
+            document.getElementById('category-selection').style.display = 'block';
+            
+            // Reset test data
+            testData = [];
+            currentQuestion = 0;
+            userAnswers = [];
+            scores = [];
+            selectedCategory = '';
+        }
+
+        function downloadResults() {
+            // Prepare data for Excel
+            const today = new Date();
+            const dateStr = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+            
+            const resultsData = testData.map((item, index) => {
+                const score = scores[index];
+                const memoryCount = score.correct ? 1 : 0; // 맞으면 1, 틀리면 0
+                
+                return {
+                    'No': item['No'],
+                    '영어단어': item['영어단어'],
+                    '날짜': dateStr,
+                    '외운것': memoryCount
+                };
+            });
+
+            // Create worksheet
+            const ws = XLSX.utils.json_to_sheet(resultsData);
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, '학습결과');
+            
+            // Generate filename with date and category
+            const filename = `vocabulary_results_${selectedCategory.replace(/[^a-zA-Z0-9가-힣]/g, '_')}_${dateStr}.xlsx`;
+            
+            // Download
+            XLSX.writeFile(wb, filename);
+        }
+
+        function speakWord(word) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                utterance.pitch = 1.0;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('죄송합니다. 이 브라우저는 음성 재생을 지원하지 않습니다.');
+            }
+        }
+    </script>
+</body>
+</html>
